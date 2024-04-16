@@ -1,0 +1,19 @@
+# What is the hostname of the target system?
+ 
+wade7363
+
+# What is the Linux kernel version of the target system?
+
+3.13.0-24-generic
+
+# What Linux is this?
+
+Ubuntu 14.04 LTS 
+
+# What version of the Python language is installed on the system?
+
+2.7.6
+
+# What vulnerability seem to affect the kernel of the target system? (Enter a CVE number)
+
+CVE-2015–1328
