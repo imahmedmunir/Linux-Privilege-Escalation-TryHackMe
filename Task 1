@@ -1,3 +1,5 @@
 # This is only ReadME
 
-Privilege escalation is nuanced and varies based on system configuration. Factors like kernel version, installed apps, and user passwords influence the journey to root access. This guide covers key vectors for privilege escalation, essential for tasks like CTFs, certifications, or penetration testing.
+Privilege escalation is nuanced and varies based on system configuration. 
+Factors like kernel version, installed apps, and user passwords influence the journey to root access.
+This guide covers key vectors for privilege escalation, essential for tasks like CTFs, certifications, or penetration testing.
