@@ -1,0 +1,7 @@
+# only ReadMe
+
+Privilege escalation involves moving from a lower-permission account to a higher one, 
+often by exploiting vulnerabilities or oversights in a system. 
+It's important because gaining administrative access allows for critical 
+actions like resetting passwords, bypassing access controls, editing configurations, 
+enabling persistence, and executing administrative commands.
