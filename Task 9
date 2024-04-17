@@ -12,11 +12,11 @@ As you'll follow the process and go to home directory of user karen. You'll see 
 Once you check the content , there is nothing of use. As it only makes the zip of some folder. 
 However we can make use of it to generate reverse shell. 
 OH! NO !  😥 
-You have the write access but not the execution access. Let's modify the bash script file by following command:
+You have the write permission but not the execution permission. Let's modify the bash script file by following command:
 
 chmod u+x backup.sh
 
-😍 you're good to now. 
+😍 you're good to go now. 
 
 open file with your favourite text editor and enter the following code to generate reverse shell. 
 
@@ -37,7 +37,7 @@ Answer : THM-383000283
 # What is Matt's password?
 
 Matt's? Where is it comming from because there is no file or clue ? 
-Stop for moment, did you check the /etc/passwd?
+Stop for a moment, did you check the /etc/passwd?
 Yeah, exactly you need to check all the user that are available. You found user "Matt". that's good 
 But question is how would you come to know the password of Matt user?
 As you're root user now, head to directory /etc/shadow to read the hash of password of Matt.
