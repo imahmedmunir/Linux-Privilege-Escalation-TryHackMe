@@ -10,11 +10,13 @@ We'll remove the comment (#) and save the file and restart the redis server. As 
 
 thm@ip-10-10-29-68:~$ find / -type f -name redis.conf 2>/dev/null
 /etc/redis/redis.conf
+
 thm@ip-10-10-29-68:~$ sudo nano /etc/redis/redis.conf (edit the file , remove comment from requirepass)
 
 thm@ip-10-10-29-68:~$ sudo systemctl restart redis (restart)
 
 thm@ip-10-10-29-68:~$ get-flags
+
 {
   "ssh_weak_ciphers": "VULN",
   "ssh_weak_kex": "VULN",
@@ -31,6 +33,5 @@ thm@ip-10-10-29-68:~$ get-flags
   "cleartext_services": "VULN",
   "anon_ftp": "VULN"
 }
-thm@ip-10-10-29-68:~$ 
 
 
